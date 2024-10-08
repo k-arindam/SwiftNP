@@ -37,9 +37,9 @@ In any Swift file where you want to use SwiftNP:
 import SwiftNP
 ```
 
-Usage
+## Usage
 
-Creating an NDArray
+### Creating an NDArray
 
 You can create a multi-dimensional array by specifying the shape and default values:
 
@@ -47,7 +47,7 @@ You can create a multi-dimensional array by specifying the shape and default val
 let array = SNP.ones(shape: [1, 3, 512, 512])
 ```
 
-Basic Array Operations
+### Basic Array Operations
 
 SwiftNP supports element-wise operations, reshaping, and much more:
 
@@ -55,7 +55,7 @@ SwiftNP supports element-wise operations, reshaping, and much more:
 let reshapedArray = array.reshape([1, 9])
 ```
 
-Data Types
+### Data Types
 
 SwiftNP supports a wide range of numeric data types. You can specify the data type when creating an NDArray:
 
@@ -63,6 +63,6 @@ SwiftNP supports a wide range of numeric data types. You can specify the data ty
 let floatArray = NDArray(shape: [2, 2], dtype: .float64, defaultValue: 21.0)
 ```
 
-License
+## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
