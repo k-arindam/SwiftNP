@@ -18,7 +18,7 @@ public final class NDArray: CustomStringConvertible {
     public var ndim: Int { shape.count }
     public var size: Int { shape.reduce(1, *) }
     public var isScalar: Bool { shape.count == 0 }
-        
+    
     // MARK: - Initializers
     private init(shape: Shape, dtype: DType, data: [Any]) {
         self.shape = shape
@@ -32,7 +32,7 @@ public final class NDArray: CustomStringConvertible {
         guard let castedValue = dtype.cast(defaultValue) else {
             fatalError("Invalid default value")
         }
-                
+        
         var tmpArray: NDArray? = nil
         
         for dim in shape.reversed() {
@@ -48,11 +48,28 @@ public final class NDArray: CustomStringConvertible {
         self.init(shape: array.shape, dtype: array.dtype, data: array.data)
     }
     
-    convenience init(array: [any Numeric]) {
-        let shape = [2, 2]
-        let dtype: DType = .float64
+    public convenience init(array: [Any]) {
+        let inferredShape = Utils.inferShape(from: array)
+        let flattenedArray = Utils.flatten(array)
         
-        self.init(shape: shape, dtype: dtype, data: array)
+        // Check if the shape matches the size of the array
+        let totalSize = inferredShape.reduce(1, *)
+        guard flattenedArray.count == totalSize else {
+            fatalError("Shape \(inferredShape) does not match the total number of elements in the array: \(flattenedArray.count)")
+        }
+        
+        // Automatically detect dtype based on the first element (assuming homogeneous array)
+        guard let firstElement = flattenedArray.first as? any Numeric else {
+            fatalError("Array is empty. Cannot determine dtype.")
+        }
+        guard let dtype = DType.typeOf(firstElement) else {
+            fatalError("Could not determine dtype from array elements.")
+        }
+        
+        //        let shape = [2, 2]
+        //        let dtype: DType = .float64
+        
+        self.init(shape: inferredShape, dtype: dtype, data: array)
     }
     
     private convenience init(repeating: Any, count: Int, dtype: DType) {
@@ -74,6 +91,8 @@ public final class NDArray: CustomStringConvertible {
         
         self.init(shape: [count], dtype: dtype, data: data)
     }
+    
+    // MARK: - Methods
     
     internal static func generate(of shape: Shape, with value: any Numeric) -> NDArray {
         guard let dtype = DType.typeOf(value) else { fatalError("Unable to determine data type") }

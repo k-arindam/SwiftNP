@@ -8,6 +8,7 @@
 import Foundation
 
 public enum DType: CaseIterable {
+    case int
     case int8
     case int16
     case int32
@@ -23,6 +24,7 @@ public enum DType: CaseIterable {
     
     public var type: any Numeric.Type {
         switch self {
+        case .int:     return Int.self
         case .int8:    return Int8.self
         case .int16:   return Int16.self
         case .int32:   return Int32.self
@@ -40,6 +42,7 @@ public enum DType: CaseIterable {
     
     public static func typeOf(_ input: any Numeric) -> DType? {
         switch input {
+        case is Int:     return .int
         case is Int8:    return .int8
         case is Int16:   return .int16
         case is Int32:   return .int32
@@ -58,6 +61,7 @@ public enum DType: CaseIterable {
     
     public func cast(_ value: NSNumber) -> (any Numeric)? {
         switch self {
+        case .int:     return Int(exactly: value)
         case .int8:    return Int8(exactly: value)
         case .int16:   return Int16(exactly: value)
         case .int32:   return Int32(exactly: value)

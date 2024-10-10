@@ -4,7 +4,7 @@
 import Foundation
 
 public final class SwiftNP {
-    public static func ndarray(_ swiftArray: [any Numeric]) -> NDArray {
+    public static func ndarray(_ swiftArray: [Any]) -> NDArray {
         NDArray(array: swiftArray)
     }
     

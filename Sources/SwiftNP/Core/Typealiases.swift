@@ -8,4 +8,5 @@
 import Foundation
 
 public typealias Shape = [Int]
+
 public typealias SNP = SwiftNP
