@@ -7,21 +7,25 @@
 
 import Foundation
 
+/// An enumeration representing different data types (DType) supported in SwiftNP.
+/// Each case corresponds to a numeric type used for arrays and computations.
 public enum DType: CaseIterable {
-    case int
-    case int8
-    case int16
-    case int32
-    case int64
-    case uint8
-    case uint16
-    case uint32
-    case uint64
-    case float16
-    case float32
-    case float64
-    case double
-    
+    case int       // Represents a 32-bit signed integer
+    case int8      // Represents an 8-bit signed integer
+    case int16     // Represents a 16-bit signed integer
+    case int32     // Represents a 32-bit signed integer
+    case int64     // Represents a 64-bit signed integer
+    case uint8     // Represents an 8-bit unsigned integer
+    case uint16    // Represents a 16-bit unsigned integer
+    case uint32    // Represents a 32-bit unsigned integer
+    case uint64    // Represents a 64-bit unsigned integer
+    case float16   // Represents a 16-bit floating point
+    case float32   // Represents a 32-bit floating point
+    case float64   // Represents a 64-bit floating point
+    case double    // Represents a double-precision floating point
+
+    /// Returns the corresponding numeric type for the DType.
+    /// - Returns: The type associated with the DType case.
     public var type: any Numeric.Type {
         switch self {
         case .int:     return Int.self
@@ -39,7 +43,10 @@ public enum DType: CaseIterable {
         case .double:  return Double.self
         }
     }
-    
+
+    /// Determines the DType of a given numeric input.
+    /// - Parameter input: A numeric value of any type.
+    /// - Returns: The corresponding DType, or nil if the input type is unsupported.
     public static func typeOf(_ input: any Numeric) -> DType? {
         switch input {
         case is Int:     return .int
@@ -58,7 +65,10 @@ public enum DType: CaseIterable {
         default:         return nil
         }
     }
-    
+
+    /// Casts a NSNumber to the corresponding numeric type defined by the DType.
+    /// - Parameter value: A NSNumber to be cast to the specified DType.
+    /// - Returns: An optional value of the corresponding numeric type, or nil if casting fails.
     public func cast(_ value: NSNumber) -> (any Numeric)? {
         switch self {
         case .int:     return Int(exactly: value)
