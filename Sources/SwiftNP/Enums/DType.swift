@@ -9,7 +9,7 @@ import Foundation
 
 /// An enumeration representing different data types (DType) supported in SwiftNP.
 /// Each case corresponds to a numeric type used for arrays and computations.
-public enum DType: CaseIterable {
+public enum DType: CaseIterable, Codable {
     case int       // Represents a 32-bit signed integer
     case int8      // Represents an 8-bit signed integer
     case int16     // Represents a 16-bit signed integer
