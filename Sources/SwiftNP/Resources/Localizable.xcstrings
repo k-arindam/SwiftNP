@@ -1,0 +1,83 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CreateUnsuccessful" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unable to create array."
+          }
+        }
+      }
+    },
+    "EmptyArray" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the requested array is empty."
+          }
+        }
+      }
+    },
+    "InhomogeneousShape" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the requested array has an inhomogeneous shape. The detected shape was %@."
+          }
+        }
+      }
+    },
+    "NegativeDim" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "negative dimensions are not allowed."
+          }
+        }
+      }
+    },
+    "ReshapeArraySizeMismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot reshape array of size %@ into shape %@."
+          }
+        }
+      }
+    },
+    "UnknownDType" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "could not determine dtype from array elements."
+          }
+        }
+      }
+    },
+    "UnknownDTypeOf" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to determine data type of %@."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

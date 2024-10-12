@@ -53,30 +53,31 @@ public final class NDArray: CustomStringConvertible {
     /// Generates an NDArray filled with a specified numeric value and shape.
     ///
     /// - Parameters:
-    ///   - shape: The desired shape of the NDArray.
-    ///   - value: The numeric value to fill the NDArray with.
-    /// - Returns: An NDArray initialized with the specified shape and filled with the value.
-    /// - Fatal error: Will occur if the data type cannot be determined from the value.
+    ///   - shape: A `Shape` representing the desired dimensions of the NDArray (e.g., [2, 3] for a 2x3 matrix).
+    ///   - value: A numeric value (e.g., Int, Float, etc.) used to fill the entire NDArray.
+    /// - Returns: An NDArray initialized with the specified shape and filled with the numeric value.
+    /// - Throws: `SNPError.typeError` if the data type cannot be determined from the provided value.
     internal static func generate(of shape: Shape, with value: any Numeric) throws(SNPError) -> NDArray {
-        guard let dtype = DType.typeOf(value) else { throw SNPError.typeError("Unable to determine data type of \(value).") }
         
+        // Attempt to determine the dtype from the provided numeric value. If dtype can't be determined, throw a type error.
+        guard let dtype = DType.typeOf(value) else {
+            throw SNPError.typeError(.custom(key: "UnknownDTypeOf", args: ["\(value)"]))
+        }
+        
+        // If the shape is empty (scalar case), return an NDArray with a single value.
         if shape.count == 0 {
             return NDArray(repeating: value, count: 1, dtype: dtype) // Scalar case
         }
         
+        // If the shape is one-dimensional, return an NDArray filled with the value, repeated the required number of times.
         if shape.count == 1 {
             return NDArray(repeating: value, count: shape.first!, dtype: dtype) // 1D case
         }
         
-        // Recursive case for multi-dimensional arrays
-        let repeating = try generate(of: Array(shape.dropFirst()), with: value)
-        return NDArray(repeating: repeating, count: shape.first!, dtype: dtype)
+        // Recursive case: for higher-dimensional arrays, generate an array with one dimension less, and then repeat that array.
+        let repeating = try generate(of: Array(shape.dropFirst()), with: value) // Recursive generation
+        return NDArray(repeating: repeating, count: shape.first!, dtype: dtype) // Create NDArray with repeated values
     }
-    
-    /// Reshapes the NDArray to a new specified shape.
-    /// - Parameter shape: The new shape to reshape the NDArray to.
-    /// - Returns: An optional NDArray with the new shape, or nil if the reshape fails.
-    private func reshape(to shape: Shape) -> NDArray? { nil }
     
     /// Returns a string representation of the NDArray including its shape, dtype, and data.
     public func toString() -> String {
