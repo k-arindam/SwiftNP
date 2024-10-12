@@ -8,9 +8,9 @@ struct NDArrayFoundationTests {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.
         
         let output1 = SNP.ones(shape: [1, 3, 50, 3, 1, 7])
-        let output2 = NDArray.generate(of: [1, 3, 50, 3, 1, 7], with: 1.0)
+        let output2 = try? NDArray.generate(of: [1, 3, 50, 3, 1, 7], with: 1.0)
         
-        #expect(output1.toString() == output2.toString(), "Both outputs should be equal")
+        #expect(output1.toString() == output2?.toString(), "Both outputs should be equal")
     }
     
     @Test("Verify conformsToShape()")
@@ -53,8 +53,8 @@ struct NDArrayFoundationTests {
     func createNDArrayFromSwiftArray() async throws {
         let input = [
             [
-                [[1], [2], [3]],
-                [[4], [5], [6]],
+                [1, 2, 3],
+                [4, 5, 6],
                 [7, 8, 9]
             ],
             [
@@ -79,8 +79,8 @@ struct NDArrayFoundationTests {
             ]
         ] as [Any]
         
-        let output = NDArray(array: input)
+        let output = try? SNP.ndarray(input)
         
-        debugPrint("----->>> \(output)")
+        #expect(output != nil)
     }
 }

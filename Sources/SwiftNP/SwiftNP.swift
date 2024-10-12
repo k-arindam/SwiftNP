@@ -14,8 +14,8 @@ public final class SwiftNP {
     /// Example:
     ///     let array: [Any] = [1, 2, 3]
     ///     let ndarray = SwiftNP.ndarray(array) // Creates an NDArray from the array
-    public static func ndarray(_ swiftArray: [Any]) -> NDArray {
-        NDArray(array: swiftArray)
+    public static func ndarray(_ swiftArray: [Any]) throws(SNPError) -> NDArray {
+        try NDArray(array: swiftArray)
     }
     
     /// Creates an NDArray filled with zeros of a specified shape.
