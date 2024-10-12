@@ -57,8 +57,8 @@ public final class NDArray: CustomStringConvertible {
     ///   - value: The numeric value to fill the NDArray with.
     /// - Returns: An NDArray initialized with the specified shape and filled with the value.
     /// - Fatal error: Will occur if the data type cannot be determined from the value.
-    internal static func generate(of shape: Shape, with value: any Numeric) -> NDArray {
-        guard let dtype = DType.typeOf(value) else { fatalError("Unable to determine data type") }
+    internal static func generate(of shape: Shape, with value: any Numeric) throws(SNPError) -> NDArray {
+        guard let dtype = DType.typeOf(value) else { throw SNPError.typeError("Unable to determine data type of \(value).") }
         
         if shape.count == 0 {
             return NDArray(repeating: value, count: 1, dtype: dtype) // Scalar case
@@ -69,7 +69,8 @@ public final class NDArray: CustomStringConvertible {
         }
         
         // Recursive case for multi-dimensional arrays
-        return NDArray(repeating: generate(of: Array(shape.dropFirst()), with: value), count: shape.first!, dtype: dtype)
+        let repeating = try generate(of: Array(shape.dropFirst()), with: value)
+        return NDArray(repeating: repeating, count: shape.first!, dtype: dtype)
     }
     
     /// Reshapes the NDArray to a new specified shape.

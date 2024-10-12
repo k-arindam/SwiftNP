@@ -45,28 +45,40 @@ extension NDArray {
     
     /// Initializes an NDArray from a Swift array of any type.
     ///
-    /// - Parameter array: An array containing elements of any type.
+    /// - Parameter array: A Swift array containing elements of any type (e.g., Int, Float, etc.).
     /// - Precondition: The shape inferred from the array must match the number of elements.
-    /// - Fatal error: Will occur if the array is empty or if dtype cannot be determined.
-    public convenience init(array: [Any]) {
-        let inferredShape = Utils.inferShape(from: array) // Infer shape from the array
-        let flattenedArray = Utils.flatten(array) // Flatten the array
+    /// - Throws: `SNPError.indexError` if the array is empty, `SNPError.shapeError` if the array has an inhomogeneous shape, and `SNPError.assertionError` if dtype cannot be determined.
+    /// - Fatal error: Will occur if the array is empty or dtype cannot be determined, preventing initialization.
+    internal convenience init(array: [Any]) throws(SNPError) {
         
-        // Check if the inferred shape matches the number of elements
-        let totalSize = inferredShape.reduce(1, *)
-        guard flattenedArray.count == totalSize else {
-            fatalError("Shape \(inferredShape) does not match the total number of elements in the array: \(flattenedArray.count)")
+        // Ensure the array is not empty. If it is, throw an index error.
+        guard !array.isEmpty else {
+            throw SNPError.indexError("The requested array is empty.")
         }
         
-        // Automatically detect dtype based on the first element (assuming homogeneous array)
+        // Infer the shape of the array. This ensures that the array conforms to a specific dimensional structure.
+        let inferredShape = Utils.inferShape(from: array)
+        
+        // Flatten the multi-dimensional array into a single-dimensional array for easier manipulation.
+        let flattenedArray = Utils.flatten(array)
+        
+        // Check if the array conforms to the inferred shape. If not, throw a shape error.
+        guard Utils.conformsToShape(array: array, shape: inferredShape) else {
+            throw SNPError.shapeError("The requested array has an inhomogeneous shape. The detected shape was \(inferredShape).")
+        }
+        
+        // Automatically detect the data type (dtype) based on the first element of the flattened array.
+        // Assuming a homogeneous array, all elements should have the same type as the first.
         guard let firstElement = flattenedArray.first as? any Numeric else {
-            fatalError("Array is empty. Cannot determine dtype.")
-        }
-        guard let dtype = DType.typeOf(firstElement) else {
-            fatalError("Could not determine dtype from array elements.")
+            throw SNPError.assertionError("Array is empty. Cannot determine dtype.")
         }
         
-        // Initialize the NDArray with the inferred shape and dtype
+        // Use the first element to determine the dtype. If the dtype cannot be determined, throw an error.
+        guard let dtype = DType.typeOf(firstElement) else {
+            throw SNPError.assertionError("Could not determine dtype from array elements.")
+        }
+        
+        // Initialize the NDArray with the inferred shape, detected dtype, and original array data.
         self.init(shape: inferredShape, dtype: dtype, data: array)
     }
     
