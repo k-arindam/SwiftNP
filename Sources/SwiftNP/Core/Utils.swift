@@ -8,8 +8,8 @@
 import Foundation
 
 /// A utility class that provides helper functions and methods for the SwiftNP framework.
-/// This class is declared as public and final, meaning it cannot be subclassed and is accessible from outside its defining module.
-public final class Utils {
+/// This class is declared as internal and final, meaning it cannot be subclassed and is not accessible from outside its defining module.
+internal final class Utils {
     /// Infers the shape of a nested array structure.
     ///
     /// - Parameter array: An array that can contain elements of any type, potentially including nested arrays.
@@ -21,7 +21,7 @@ public final class Utils {
     ///     let result = inferShape(from: nestedArray)  // result could represent a shape like [2, 3]
     ///
     /// - Complexity: O(d), where d is the depth of the nested structure.
-    public static func inferShape<T>(from array: [T]) -> Shape {
+    internal static func inferShape<T>(from array: [T]) -> Shape {
         var shape = Shape() // Initialize a Shape object to store dimensions
         
         var currentArray: Any = array // Start with the input array
@@ -46,7 +46,7 @@ public final class Utils {
     ///     let result = flatten(nestedArray)  // result will be [1, 2, 3, 4, 5, 6]
     ///
     /// - Complexity: O(n), where n is the total number of elements across all nested arrays.
-    public static func flatten<T>(_ array: [T]) -> [Any] {
+    internal static func flatten<T>(_ array: [T]) -> [Any] {
         var flattened = [Any]() // Initialize an empty array to hold flattened elements
         
         for element in array {
@@ -75,7 +75,7 @@ public final class Utils {
     ///     let result = conformsToShape(array: array, shape: shape)  // result will be true
     ///
     /// - Complexity: O(n), where n is the total number of elements in the array.
-    public static func conformsToShape(array: [Any], shape: Shape) -> Bool {
+    internal static func conformsToShape(array: [Any], shape: Shape) -> Bool {
         // Helper function to recursively check if the array conforms to the given shape at each level
         func verifyShape(_ array: Any, shape: [Int], level: Int = 0) -> Bool {
             if level >= shape.count {
@@ -102,4 +102,39 @@ public final class Utils {
         return verifyShape(array, shape: shape)
     }
     
+    /// Compares two arrays (or nested arrays) for equality.
+    ///
+    /// - Parameters:
+    ///   - array1: The first array or element to compare.
+    ///   - array2: The second array or element to compare.
+    /// - Returns: A boolean indicating whether the two arrays (or elements) are equal.
+    ///
+    /// This function checks if both inputs are of the same type.
+    /// If both are arrays, it compares their counts and recursively compares their elements.
+    /// If they are not arrays, it compares their string representations for equality.
+    internal static func equalArray(_ array1: Any, _ array2: Any) -> Bool {
+        // Check if both are of the same type
+        guard type(of: array1) == type(of: array2) else {
+            return false
+        }
+        
+        if let array1 = array1 as? [Any], let array2 = array2 as? [Any] {
+            // If both are arrays, compare their counts
+            guard array1.count == array2.count else {
+                return false
+            }
+            
+            // Compare each element
+            for (element1, element2) in zip(array1, array2) {
+                if !equalArray(element1, element2) {
+                    return false
+                }
+            }
+            
+            return true
+        }
+        
+        // If they are not arrays, compare them directly
+        return "\(array1)" == "\(array2)"
+    }
 }

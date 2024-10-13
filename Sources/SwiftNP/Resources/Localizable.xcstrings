@@ -51,7 +51,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cannot reshape array of size %@ into shape %@."
+            "value" : "cannot reshape array of size %@ into shape %@."
+          }
+        }
+      }
+    },
+    "SameShapeRequired" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "shapes of both the NDArrays must match."
           }
         }
       }
@@ -73,7 +84,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unable to determine data type of %@."
+            "value" : "unable to determine data type of %@."
           }
         }
       }
