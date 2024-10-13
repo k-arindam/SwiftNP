@@ -7,7 +7,15 @@
 
 import Foundation
 
+/// An extension on the `Numeric` protocol to convert numeric values to `NSNumber`.
 public extension Numeric {
+    /// This property uses pattern matching to determine the type of the numeric value
+    /// and returns an `NSNumber` representation for different numeric types.
+    ///
+    /// - Supported types: `Int`, `Int8`, `Int16`, `Int32`, `Int64`, `UInt`, `UInt8`, `UInt16`, `UInt32`, `UInt64`,
+    ///   `Float`, `Float16`, `Float32`, `Float64`, `Double`.
+    ///
+    /// - If the numeric type is unsupported, it triggers a fatal error.
     var nsnumber: NSNumber {
         switch self {
         case let intValue as Int:
