@@ -41,8 +41,11 @@ public final class NDArray: Equatable, CustomStringConvertible {
     /// The data type of the elements in the NDArray.
     public let dtype: DType
     
+    /// The content type of the NDArray, if any.
+    public let contentType: ContentType
+    
     /// The underlying data storage for the elements of the NDArray.
-    internal let data: [Any]
+    internal let data: NDStorage
     
     // MARK: - Getter & Setters
     
@@ -63,10 +66,11 @@ public final class NDArray: Equatable, CustomStringConvertible {
     ///   - shape: The shape of the NDArray.
     ///   - dtype: The data type of the elements.
     ///   - data: The underlying data array.
-    internal init(shape: Shape, dtype: DType, data: [Any]) {
+    internal init(shape: Shape, dtype: DType, data: [Any], contentType: ContentType = .unknown) {
         self.shape = shape
         self.dtype = dtype
         self.data = data
+        self.contentType = contentType
     }
     
     // MARK: - Methods
@@ -131,6 +135,44 @@ public final class NDArray: Equatable, CustomStringConvertible {
         }
         
         return try flatten(self) // Call the flatten function on the current NDArray
+    }
+    
+    /// Retrieves the raw data of the NDArray as an array of `Any` type elements.
+    /// This method handles both numeric elements and nested NDArrays, recursively fetching data.
+    ///
+    /// - Throws: `SNPError.typeError` if the data type is unknown or unsupported.
+    ///
+    /// - Returns: An array of `Any`, representing the NDArray's raw data.
+    internal func rawData() throws(SNPError) -> [Any] {
+        
+        /// Recursively fetches data from an NDArray, handling both numeric elements and nested NDArrays.
+        ///
+        /// - Parameter array: The NDArray to fetch data from.
+        /// - Throws: `SNPError.typeError` if an unknown data type is encountered.
+        /// - Returns: An array of `Any` representing the NDArray's content.
+        func fetchData(from array: NDArray) throws(SNPError) -> [Any] {
+            // Check if the data in the NDArray is already a numeric array
+            if let array = array.data as? [any Numeric] {
+                return array  // Return numeric array directly
+            }
+            // If the data contains nested NDArrays, recursively fetch data from each NDArray
+            else if let array = array.data as? [NDArray] {
+                do {
+                    // Map over the nested arrays, applying the fetch recursively
+                    return try array.map { try fetchData(from: $0) }
+                } catch {
+                    // If an error occurs during recursion, throw an unknown data type error
+                    throw SNPError.typeError(.custom(key: "UnknownDType"))
+                }
+            }
+            // If the data doesn't match any supported types, throw an error
+            else {
+                throw SNPError.typeError(.custom(key: "UnknownDType"))
+            }
+        }
+
+        // Call the recursive fetch function starting with the current NDArray
+        return try fetchData(from: self)
     }
     
     /// Returns a string representation of the NDArray including its shape, dtype, and data.

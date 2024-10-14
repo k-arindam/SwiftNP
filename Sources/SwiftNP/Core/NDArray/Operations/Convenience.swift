@@ -56,7 +56,7 @@ extension NDArray {
     /// - Throws: `SNPError.indexError` if the array is empty,
     ///           `SNPError.shapeError` if the array has an inhomogeneous shape,
     ///           and `SNPError.assertionError` if dtype cannot be determined.
-    internal convenience init(array: [Any]) throws(SNPError) {
+    internal convenience init(array: [Any], contentType: ContentType = .unknown) throws(SNPError) {
         
         // Ensure the array is not empty. If it is, throw an index error.
         guard !array.isEmpty else {
@@ -108,7 +108,7 @@ extension NDArray {
         
         // Initialize the NDArray with the inferred shape, detected dtype, and original array data.
         if let ndarray = try map(array: array) as? NDArray {
-            self.init(shape: inferredShape, dtype: dtype, data: ndarray.data)
+            self.init(shape: inferredShape, dtype: dtype, data: ndarray.data, contentType: contentType)
         } else {
             throw SNPError.assertionError(.custom(key: "CreateUnsuccessful"))
         }

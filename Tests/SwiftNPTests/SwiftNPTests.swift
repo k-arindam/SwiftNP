@@ -1,4 +1,10 @@
 import Testing
+import CoreML
+
+#if canImport(UIKit)
+import UIKit
+#endif
+
 @testable import SwiftNP
 
 @Suite("NDArray Foundation Tests")
@@ -166,5 +172,30 @@ struct NDArrayFoundationTests {
         
         #expect(array5 == array6)
         #expect(array7 == array8)
+    }
+    
+    @available(iOS 15.0, *)
+    @Test func uiimageNDArray() async throws {
+        let input = UIImage(named: "banner.png", in: Bundle.module, with: nil)
+        let array = try input?.toNDArray
+        
+        #expect(array != nil)
+        
+        if let array = array {
+            let raw = try array.rawData()
+            let newArray = try NDArray(array: raw, contentType: .image)
+            let op = try UIImage(ndarray: newArray)
+            
+            debugPrint("----->>> \(array.shape), \(op.size)")
+        }
+    }
+    
+    @Test func mlmultiarrayNDArray() async throws {
+        let input = try MLMultiArray([1, 2, 3])
+        let array = try input.toNDArray
+        let output = try MLMultiArray.from(ndarray: array)
+        
+        #expect(input == output)
+        
     }
 }

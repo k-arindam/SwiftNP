@@ -17,24 +17,27 @@ public enum SNPError: Error, CustomStringConvertible {
     case memoryError(String)        // Error related to memory allocation or access
     case floatingPointError(String) // Error for floating point precision issues
     case assertionError(String)     // Error for assertion failures
+    case otherError(String)         // Error for all other types of error
     
     /// A textual description of the error, used for logging and debugging.
     public var description: String {
         switch self {
         case .shapeError(let message):
-            return "ShapeError: \(message)" // Describes shape-related errors
+            return "ShapeError: \(message)"         // Describes shape-related errors
         case .typeError(let message):
-            return "TypeError: \(message)" // Describes type-related errors
+            return "TypeError: \(message)"          // Describes type-related errors
         case .valueError(let message):
-            return "ValueError: \(message)" // Describes invalid value errors
+            return "ValueError: \(message)"         // Describes invalid value errors
         case .indexError(let message):
-            return "IndexError: \(message)" // Describes index-related errors
+            return "IndexError: \(message)"         // Describes index-related errors
         case .memoryError(let message):
-            return "MemoryError: \(message)" // Describes memory-related errors
+            return "MemoryError: \(message)"        // Describes memory-related errors
         case .floatingPointError(let message):
             return "FloatingPointError: \(message)" // Describes floating point errors
         case .assertionError(let message):
-            return "AssertionError: \(message)" // Describes assertion errors
+            return "AssertionError: \(message)"     // Describes assertion errors
+        case .otherError(let message):
+            return "OtherError: \(message)"         // Describes other errors
         }
     }
 }
