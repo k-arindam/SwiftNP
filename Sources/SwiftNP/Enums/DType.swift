@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreML
 
 /// An enumeration representing different data types (DType) supported in SwiftNP.
 /// Each case corresponds to a numeric type used for arrays and computations.
@@ -23,7 +24,7 @@ public enum DType: CaseIterable, Codable {
     case float32   // Represents a 32-bit floating point
     case float64   // Represents a 64-bit floating point
     case double    // Represents a double-precision floating point
-
+    
     /// Returns the corresponding numeric type for the DType.
     /// - Returns: The type associated with the DType case.
     public var type: any Numeric.Type {
@@ -43,7 +44,33 @@ public enum DType: CaseIterable, Codable {
         case .double:  return Double.self
         }
     }
-
+    
+    /// A computed property that maps the DType to the corresponding MLMultiArrayDataType.
+    /// This is useful for integrating with Core ML when converting NDArray data types.
+    public var mlMultiArrayDataType: MLMultiArrayDataType? {
+        switch self {
+            // Map all integer types to int32 for compatibility.
+        case .int, .int8, .int16, .int32:
+            return .int32
+            // For float16, check the iOS version and return the appropriate type.
+        case .float16:
+            if #available(iOS 16.0, *) {
+                return .float16
+            } else {
+                return .float32  // Fallback to float32 for earlier iOS versions.
+            }
+            // Return float32 for the float32 DType.
+        case .float32:
+            return .float32
+            // Return double for both float64 and double types.
+        case .float64, .double:
+            return .double
+            // Return nil for unsupported types.
+        default:
+            return nil
+        }
+    }
+    
     /// Determines the DType of a given numeric input.
     /// - Parameter input: A numeric value of any type.
     /// - Returns: The corresponding DType, or nil if the input type is unsupported.
@@ -65,7 +92,7 @@ public enum DType: CaseIterable, Codable {
         default:         return nil
         }
     }
-
+    
     /// Casts a NSNumber to the corresponding numeric type defined by the DType.
     /// - Parameter value: A NSNumber to be cast to the specified DType.
     /// - Returns: An optional value of the corresponding numeric type, or nil if casting fails.

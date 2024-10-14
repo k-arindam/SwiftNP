@@ -45,6 +45,50 @@
         }
       }
     },
+    "NoCGContext" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unable to create CGContext."
+          }
+        }
+      }
+    },
+    "NoCGDataProvider" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unable to create CGDataProvider."
+          }
+        }
+      }
+    },
+    "NoCGImage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unable to get CGImage."
+          }
+        }
+      }
+    },
+    "NotImageArray" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "array doesnot contain valid image data."
+          }
+        }
+      }
+    },
     "ReshapeArraySizeMismatch" : {
       "extractionState" : "manual",
       "localizations" : {
