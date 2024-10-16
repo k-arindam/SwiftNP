@@ -198,4 +198,23 @@ struct NDArrayFoundationTests {
         #expect(input == output)
         
     }
+    
+    @Test func verifyTranspose() async throws {
+        let array = try SNP.ndarray([[[1.0, 2.0, 9.0], [3.0, 4.0, 10.0]],
+                                 [[5.0, 6.0, 11.0], [7.0, 8.0, 12.0]]])
+        
+        let t = try array.transpose()
+        
+        let output = try SNP.ndarray([[[ 1.0,  5.0],
+                                       [ 3.0,  7.0]],
+
+                                      [[ 2.0,  6.0],
+                                       [ 4.0,  8.0]],
+
+                                      [[ 9.0, 11.0],
+                                       [10.0, 12.0]]])
+        
+        debugPrint("----->>> \(t)")
+        #expect(t == output)
+    }
 }

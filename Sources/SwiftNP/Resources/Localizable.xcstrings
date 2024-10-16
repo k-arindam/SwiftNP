@@ -23,6 +23,17 @@
         }
       }
     },
+    "InequalAxesShape" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "axes must have the same number of elements as the shape."
+          }
+        }
+      }
+    },
     "InhomogeneousShape" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -30,6 +41,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "the requested array has an inhomogeneous shape. The detected shape was %@."
+          }
+        }
+      }
+    },
+    "InvalidAxes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "invalid axes array. It must be a valid permutation of [0, %@]."
           }
         }
       }
@@ -74,6 +96,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "unable to get CGImage."
+          }
+        }
+      }
+    },
+    "NotFlat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the input is not a flat 1D array."
           }
         }
       }
