@@ -38,7 +38,7 @@ extension NDArray {
     ///   - scalar: The scalar value to multiply each element by.
     /// - Returns: A new NDArray with each element multiplied by the scalar.
     /// - Throws: SNPError in case of computation errors.
-    public static func *(lhs: NDArray, scalar: Double) throws(SNPError) -> NDArray { try lhs.multiply(scalar) }
+    public static func *(lhs: NDArray, scalar: Double) throws(SNPError) -> NDArray { try lhs.scalarOperation(scalar, ops: .multiply) }
     
     /// Multiplies an NDArray by a scalar
     /// - Parameters:
@@ -46,7 +46,7 @@ extension NDArray {
     ///   - rhs: The NDArray to be multiplied.
     /// - Returns: A new NDArray with each element multiplied by the scalar.
     /// - Throws: SNPError in case of computation errors.
-    public static func *(scalar: Double, rhs: NDArray) throws(SNPError) -> NDArray { try rhs.multiply(scalar) }
+    public static func *(scalar: Double, rhs: NDArray) throws(SNPError) -> NDArray { try rhs.scalarOperation(scalar, ops: .multiply) }
     
     /// Divides two NDArrays element-wise
     /// - Parameters:
@@ -62,7 +62,7 @@ extension NDArray {
     ///   - scalar: The scalar value to divide each element by.
     /// - Returns: A new NDArray with each element divided by the scalar.
     /// - Throws: SNPError in case of computation errors.
-    public static func /(lhs: NDArray, scalar: Double) throws(SNPError) -> NDArray { try lhs.divide(scalar) }
+    public static func /(lhs: NDArray, scalar: Double) throws(SNPError) -> NDArray { try lhs.scalarOperation(scalar, ops: .divide) }
     
     /// Performs an arithmetic operation (addition or subtraction) between the current NDArray instance and another NDArray.
     ///
@@ -116,41 +116,53 @@ extension NDArray {
     
     private func multiply(_ other: NDArray) throws(SNPError) -> NDArray { other }
     
-    /// Multiplies the NDArray by a scalar value element-wise.
+    private func divide(_ other: NDArray) throws(SNPError) -> NDArray { other }
+    
+    /// Performs a scalar operation (multiplication or division) on the elements of the NDArray.
+    /// The operation is applied recursively, allowing for multi-dimensional arrays.
     ///
-    /// - Parameter scalar: The scalar value to multiply each element in the NDArray by.
-    /// - Returns: A new NDArray with each element multiplied by the scalar.
-    /// - Throws: SNPError in case of invalid types or if the operation fails.
-    private func multiply(_ scalar: Double) throws(SNPError) -> NDArray {
+    /// - Parameters:
+    ///   - scalar: The scalar value to multiply or divide by.
+    ///   - ops: The type of scalar operation to perform (multiply or divide).
+    /// - Returns: A new NDArray containing the results of the scalar operation.
+    /// - Throws: `SNPError` if an unsupported type is encountered during the operation.
+    private func scalarOperation(_ scalar: Double, ops: ScalarOperation) throws(SNPError) -> NDArray {
         
-        /// A recursive helper function that multiplies each element of the input (which could be a scalar or a nested array)
-        /// by the specified scalar.
+        /// Recursively applies the scalar operation to the input data.
+        /// Handles both numeric values and multi-dimensional arrays.
         ///
         /// - Parameters:
-        ///   - input: The input which could be an NSNumber, NDArray, or an array of elements.
-        ///   - scalar: The scalar value to multiply each element by.
-        /// - Returns: The result of element-wise multiplication as a new array or scalar.
-        /// - Throws: SNPError if the input type is unsupported or if an element cannot be processed.
-        func multiplyByScalar(_ input: Any, scalar: Double) throws(SNPError) -> Any {
+        ///   - input: The input data to which the scalar operation is applied (could be numeric or an array).
+        ///   - scalar: The scalar value used in the operation.
+        /// - Returns: The result of the scalar operation, which could be a numeric value or an array.
+        /// - Throws: `SNPError` if the input type is unsupported or if an error occurs during processing.
+        func scalarRecursive(_ input: Any, scalar: Double) throws(SNPError) -> Any {
             // Check if the input is an NSNumber (a numeric type)
             if let numeric = input as? NSNumber {
                 let doubleValue = Double(truncating: numeric) // Convert to Double
-                return doubleValue * scalar // Multiply by scalar
+                
+                // Perform the appropriate scalar operation based on the specified operation type
+                if ops == .multiply {
+                    return doubleValue * scalar // Multiply by scalar
+                } else {
+                    return doubleValue / scalar // Divide by scalar
+                }
             }
             // Check if the input is an array (could be multi-dimensional)
             else if let array = input as? [Any] {
                 do {
-                    // Recursively apply multiplication to each element in the array
+                    // Apply the scalar operation recursively to each element in the array
                     return try array.map { element in
                         if let ndarray = element as? NDArray {
-                            // If the element is an NDArray, apply scalar multiplication recursively to its data
-                            return try multiplyByScalar(ndarray.data, scalar: scalar)
+                            // If the element is an NDArray, apply scalar operation recursively to its data
+                            return try scalarRecursive(ndarray.data, scalar: scalar)
                         } else {
                             // If it's not an NDArray, treat it as an individual element
-                            return try multiplyByScalar(element, scalar: scalar)
+                            return try scalarRecursive(element, scalar: scalar)
                         }
                     }
                 } catch {
+                    // Catch errors during mapping and throw a specific type error
                     throw SNPError.typeError(.custom(key: "UnknownDType"))
                 }
             } else {
@@ -159,17 +171,13 @@ extension NDArray {
             }
         }
         
-        // Perform element-wise scalar multiplication on the NDArray's data
-        guard let result = try multiplyByScalar(self.data, scalar: scalar) as? [Any] else {
-            // Ensure that the result is of the expected array type, else throw an error
+        // Apply the scalar operation recursively to the data of the NDArray
+        guard let result = try scalarRecursive(self.data, scalar: scalar) as? [Any] else {
+            // Ensure that the result is of the expected array type; otherwise, throw an assertion error
             throw SNPError.assertionError(.custom(key: "CreateUnsuccessful"))
         }
         
-        // Return a new NDArray with the multiplied data, retaining the original shape and dtype
+        // Return a new NDArray with the processed data, retaining the original shape and dtype
         return try NDArray(array: result)
     }
-    
-    private func divide(_ other: NDArray) throws(SNPError) -> NDArray { other }
-    
-    private func divide(_ scalar: Double) throws(SNPError) -> NDArray { self }
 }
