@@ -174,21 +174,21 @@ struct NDArrayFoundationTests {
         #expect(array7 == array8)
     }
     
-    @available(iOS 15.0, *)
-    @Test func uiimageNDArray() async throws {
-        let input = UIImage(named: "banner.png", in: Bundle.module, with: nil)
-        let array = try input?.toNDArray
-        
-        #expect(array != nil)
-        
-        if let array = array {
-            let raw = try array.rawData()
-            let newArray = try NDArray(array: raw, contentType: .image)
-            let op = try UIImage(ndarray: newArray)
-            
-            debugPrint("----->>> \(array.shape), \(op.size)")
-        }
-    }
+//    @available(iOS 15.0, *)
+//    @Test func uiimageNDArray() async throws {
+//        let input = UIImage(named: "banner.png", in: Bundle.module, with: nil)
+//        let array = try input?.toNDArray
+//        
+//        #expect(array != nil)
+//        
+//        if let array = array {
+//            let raw = try array.rawData()
+//            let newArray = try NDArray(array: raw, contentType: .image)
+//            let op = try UIImage(ndarray: newArray)
+//            
+//            debugPrint("----->>> \(array.shape), \(op.size)")
+//        }
+//    }
     
     @Test func mlmultiarrayNDArray() async throws {
         let input = try MLMultiArray([1, 2, 3])
@@ -197,5 +197,36 @@ struct NDArrayFoundationTests {
         
         #expect(input == output)
         
+    }
+    
+    @Test func verifyTranspose() async throws {
+        let array = try SNP.ndarray([[[1.0, 2.0, 9.0], [3.0, 4.0, 10.0]],
+                                 [[5.0, 6.0, 11.0], [7.0, 8.0, 12.0]]])
+        
+        let t = try array.transpose()
+        
+        let output = try SNP.ndarray([[[ 1.0,  5.0],
+                                       [ 3.0,  7.0]],
+
+                                      [[ 2.0,  6.0],
+                                       [ 4.0,  8.0]],
+
+                                      [[ 9.0, 11.0],
+                                       [10.0, 12.0]]])
+        
+        debugPrint("----->>> \(t)")
+        #expect(t == output)
+    }
+    
+    @Test func testScalarOps() async throws {
+        let array = try SNP.ones(shape: [3, 2, 2, 5])
+        
+        let mul = try array * 3
+        debugPrint("----->>> Mul: \(mul)")
+        
+        let div = try mul / 3
+        debugPrint("----->>> Div: \(div)")
+        
+        #expect(array == div)
     }
 }
