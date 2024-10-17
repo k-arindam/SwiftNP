@@ -18,6 +18,7 @@ public enum SNPError: Error, CustomStringConvertible {
     case floatingPointError(String) // Error for floating point precision issues
     case assertionError(String)     // Error for assertion failures
     case otherError(String)         // Error for all other types of error
+    case unimplementedError         // Error for unimplemented methods
     
     /// A textual description of the error, used for logging and debugging.
     public var description: String {
@@ -38,6 +39,8 @@ public enum SNPError: Error, CustomStringConvertible {
             return "AssertionError: \(message)"     // Describes assertion errors
         case .otherError(let message):
             return "OtherError: \(message)"         // Describes other errors
+        case .unimplementedError:
+            return "UnimplementedError: this method is not implemented yet. Please file an issue on GitHub."
         }
     }
 }

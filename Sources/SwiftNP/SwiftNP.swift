@@ -15,9 +15,9 @@ public final class SwiftNP {
     /// Example:
     ///     let array: [Any] = [1, 2, 3]
     ///     let ndarray = SwiftNP.ndarray(array) // Creates an NDArray from the array
-    public static func ndarray(_ swiftArray: [Any]) throws(SNPError) -> NDArray {
+    public static func ndarray(_ swiftArray: [Any]) throws(SNPError) -> any NDArray {
         // Convert the Swift array into an NDArray using the initializer defined in NDArray
-        try NDArray(array: swiftArray)
+        try NDArrayImpl(array: swiftArray)
     }
     
     /// Creates an NDArray filled with zeros of a specified shape.
@@ -28,9 +28,9 @@ public final class SwiftNP {
     ///
     /// Example:
     ///     let zerosArray = SwiftNP.zeros(shape: [2, 3]) // Creates a 2x3 NDArray filled with zeros
-    public static func zeros(shape: Shape) throws(SNPError) -> NDArray {
+    public static func zeros(shape: Shape) throws(SNPError) -> any NDArray {
         // Create an NDArray of the specified shape, filled with zeros
-        try NDArray(shape: shape, dtype: .float64, defaultValue: 0.0)
+        try NDArrayImpl(shape: shape, dtype: .float64, defaultValue: 0.0)
     }
     
     /// Creates an NDArray filled with ones of a specified shape.
@@ -41,9 +41,9 @@ public final class SwiftNP {
     ///
     /// Example:
     ///     let onesArray = SwiftNP.ones(shape: [2, 3]) // Creates a 2x3 NDArray filled with ones
-    public static func ones(shape: Shape) throws(SNPError) -> NDArray {
+    public static func ones(shape: Shape) throws(SNPError) -> any NDArray {
         // Create an NDArray of the specified shape, filled with ones
-        try NDArray(shape: shape, dtype: .float64, defaultValue: 1.0)
+        try NDArrayImpl(shape: shape, dtype: .float64, defaultValue: 1.0)
     }
     
     /// Computes the dot product of two NDArrays.
@@ -56,9 +56,9 @@ public final class SwiftNP {
     ///   - b: The second NDArray to be multiplied.
     /// - Returns: The result of the dot product between `a` and `b`, returned as an NDArray.
     /// - Throws: `SNPError` if there is an issue performing the dot product, such as shape mismatch or type incompatibility.
-    public static func dot(_ a: NDArray, _ b: NDArray) throws(SNPError) -> NDArray {
+    public static func dot(_ a: any NDArray, _ b: any NDArray) throws(SNPError) -> any NDArray {
         // Calls the product function on the first array `a` with the second array `b`.
-        // This assumes `a.product(b)` performs the dot product operation for two NDArrays.
-        try a.product(b)
+        // This assumes `a.dot(b)` performs the dot product operation for two NDArrays.
+        try a.dot(b)
     }
 }
