@@ -12,7 +12,7 @@ struct NDArrayFoundationTests {
     @Test("Compare ones() with generate()")
     func compareOnesWithGenerate() async throws {
         let output1 = try! SNP.ones(shape: [1, 3, 50, 3, 1, 7])
-        let output2 = try! NDArray.generate(of: [1, 3, 50, 3, 1, 7], with: 1.0)
+        let output2 = try! NDArrayImpl.generate(of: [1, 3, 50, 3, 1, 7], with: 1.0)
         
         #expect(output1.toString() == output2.toString(), "Both outputs should be equal")
     }
@@ -115,8 +115,8 @@ struct NDArrayFoundationTests {
         let array2 = try SNP.ndarray(matrixB)
         let array3 = try SNP.ndarray(matrixC)
         
-        debugPrint("----->>> \(array1 == array3)")
-        #expect(array1 == array2, "\(array1) != \(array2)")
+        debugPrint("----->>> \(array1 === array3)")
+        #expect(array1 === array2, "\(array1) != \(array2)")
     }
     
     @Test("Multiply By Scalar")
@@ -137,7 +137,7 @@ struct NDArrayFoundationTests {
         
         debugPrint(result.toString() + directResult.toString())
         
-        #expect(result == directResult)
+        #expect(result === directResult)
     }
     
     @Test("Element-wise Addition")
@@ -167,28 +167,30 @@ struct NDArrayFoundationTests {
         let array5 = try SNP.ndarray(output)
         let array6 = try array1 + array2
         
-        let array7 = try NDArray(shape: [9, 6, 8, 2], dtype: .float64, defaultValue: 2.0)
+        let array7 = try NDArrayImpl(shape: [9, 6, 8, 2], dtype: .float64, defaultValue: 2.0)
         let array8 = try array3 + array4
         
-        #expect(array5 == array6)
-        #expect(array7 == array8)
+        #expect(array5 === array6)
+        #expect(array7 === array8)
     }
     
-//    @available(iOS 15.0, *)
-//    @Test func uiimageNDArray() async throws {
-//        let input = UIImage(named: "banner.png", in: Bundle.module, with: nil)
-//        let array = try input?.toNDArray
-//        
-//        #expect(array != nil)
-//        
-//        if let array = array {
-//            let raw = try array.rawData()
-//            let newArray = try NDArray(array: raw, contentType: .image)
-//            let op = try UIImage(ndarray: newArray)
-//            
-//            debugPrint("----->>> \(array.shape), \(op.size)")
-//        }
-//    }
+    #if canImport(UIKit)
+    @available(iOS 15.0, *)
+    @Test func uiimageNDArray() async throws {
+        let input = UIImage(named: "banner.png", in: Bundle.module, with: nil)
+        let array = try input?.toNDArray as? NDArrayImpl
+        
+        #expect(array != nil)
+        
+        if let array = array {
+            let raw = try array.rawData()
+            let newArray = try NDArrayImpl(array: raw, contentType: .image)
+            let op = try UIImage(ndarray: newArray)
+            
+            debugPrint("----->>> \(array.shape), \(op.size)")
+        }
+    }
+    #endif
     
     @Test func mlmultiarrayNDArray() async throws {
         let input = try MLMultiArray([1, 2, 3])
@@ -215,7 +217,7 @@ struct NDArrayFoundationTests {
                                        [10.0, 12.0]]])
         
         debugPrint("----->>> \(t)")
-        #expect(t == output)
+        #expect(t === output)
     }
     
     @Test func testScalarOps() async throws {
@@ -227,7 +229,7 @@ struct NDArrayFoundationTests {
         let div = try mul / 3
         debugPrint("----->>> Div: \(div)")
         
-        #expect(array == div)
+        #expect(array === div)
     }
     
     @Test func multiOperation() async throws {
@@ -236,7 +238,7 @@ struct NDArrayFoundationTests {
         
         let result = try (try input / 3).transpose()
         
-        #expect(result == output)
+        #expect(result === output)
     }
     
     @Test func testDotProduct() async throws {
@@ -246,7 +248,7 @@ struct NDArrayFoundationTests {
         let output = try SNP.ndarray([[7.0, 10.0], [15.0, 22.0]])
         let result = try SNP.dot(matA, matB)
         
-        #expect(result == output)
+        #expect(result === output)
         
         debugPrint("----->>> \(try SNP.dot(matA, matB))")
     }
