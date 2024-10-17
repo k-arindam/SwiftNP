@@ -229,4 +229,13 @@ struct NDArrayFoundationTests {
         
         #expect(array == div)
     }
+    
+    @Test func multiOperation() async throws {
+        let input = try SNP.ndarray([[6.0, 3.0], [0.0, -3.0]])
+        let output = try SNP.ndarray([[2.0, 0.0], [1.0, -1.0]])
+        
+        let result = try (try input / 3).transpose()
+        
+        #expect(result == output)
+    }
 }
