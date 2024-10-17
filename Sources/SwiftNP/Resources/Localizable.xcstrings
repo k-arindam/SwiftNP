@@ -23,6 +23,17 @@
         }
       }
     },
+    "IncompatibleShapes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "array of shape %@ and %@ cannot be used to complete this operation."
+          }
+        }
+      }
+    },
     "InequalAxesShape" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -63,6 +74,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "negative dimensions are not allowed."
+          }
+        }
+      }
+    },
+    "NoBroadcasting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "incompatible shapes for broadcasting."
           }
         }
       }

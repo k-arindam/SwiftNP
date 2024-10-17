@@ -15,4 +15,10 @@ internal enum ArithmeticOperation: MatrixOperation, Codable, CaseIterable {
     
     /// Represents the subtraction operation between two NDArray instances.
     case subtraction
+    
+    /// Represents the multiplication operation between two NDArray instances.
+    case multiplication
+    
+    /// Represents the division operation between two NDArray instances.
+    case division
 }

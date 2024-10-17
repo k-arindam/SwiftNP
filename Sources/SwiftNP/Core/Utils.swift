@@ -223,5 +223,44 @@ internal final class Utils {
         // Return the fully reshaped array.
         return reshapedArray
     }
+    
+    /// Computes the broadcasted shape from two shapes (lhs and rhs).
+    ///
+    /// Broadcasting is a technique used in numerical computing where two arrays of different shapes
+    /// can still be used together in operations like addition or multiplication. The broadcasting rules 
+    /// determine how shapes of different sizes are "stretched" so they can be compatible.
+    ///
+    /// This function calculates the broadcasted shape for two input shapes, following the broadcasting rules:
+    /// - Dimensions must be either the same or one of them must be 1.
+    /// - If neither condition is met, an error is thrown.
+    ///
+    /// - Parameters:
+    ///   - lhs: The shape of the left-hand operand.
+    ///   - rhs: The shape of the right-hand operand.
+    /// - Throws: SNPError.shapeError if broadcasting is not possible.
+    /// - Returns: The resulting broadcasted shape.
+    internal static func broadcastShape(_ lhs: Shape, _ rhs: Shape) throws(SNPError) -> Shape {
+        let rankA = lhs.count  // Rank (number of dimensions) of the left-hand shape
+        let rankB = rhs.count  // Rank (number of dimensions) of the right-hand shape
+        let maxRank = max(rankA, rankB)  // Maximum rank between the two shapes
 
+        // Initialize the broadcasted shape with ones
+        var broadcastedShape = Shape(repeating: 1, count: maxRank)
+        
+        // Iterate through dimensions from the last to the first
+        for i in 0..<maxRank {
+            let dimA = i < rankA ? lhs[rankA - 1 - i] : 1  // Get dimension from lhs, default to 1 if out of range
+            let dimB = i < rankB ? rhs[rankB - 1 - i] : 1  // Get dimension from rhs, default to 1 if out of range
+            
+            // If dimensions do not match and neither is 1, broadcasting is not possible
+            if dimA != dimB && dimA != 1 && dimB != 1 {
+                throw SNPError.shapeError(.custom(key: "NoBroadcasting"))
+            }
+            
+            // Set the broadcasted dimension to the maximum of the two
+            broadcastedShape[maxRank - 1 - i] = max(dimA, dimB)
+        }
+
+        return broadcastedShape
+    }
 }
