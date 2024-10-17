@@ -19,7 +19,7 @@ Add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/k-arindam/SwiftNP", from: "0.0.6")
+    .package(url: "https://github.com/k-arindam/SwiftNP", from: "0.0.7")
 ]
 ```
 
