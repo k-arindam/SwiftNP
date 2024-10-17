@@ -238,4 +238,16 @@ struct NDArrayFoundationTests {
         
         #expect(result == output)
     }
+    
+    @Test func testDotProduct() async throws {
+        let matA = try SNP.ndarray([[1.0, 2.0], [3.0, 4.0]])
+        let matB = try SNP.ndarray([[1.0, 2.0], [3.0, 4.0]])
+        
+        let output = try SNP.ndarray([[7.0, 10.0], [15.0, 22.0]])
+        let result = try SNP.dot(matA, matB)
+        
+        #expect(result == output)
+        
+        debugPrint("----->>> \(try SNP.dot(matA, matB))")
+    }
 }

@@ -45,4 +45,20 @@ public final class SwiftNP {
         // Create an NDArray of the specified shape, filled with ones
         try NDArray(shape: shape, dtype: .float64, defaultValue: 1.0)
     }
+    
+    /// Computes the dot product of two NDArrays.
+    ///
+    /// The `dot` function is a shorthand to compute the dot product between two NDArrays `a` and `b`.
+    /// It internally calls the `product` method of the first NDArray (`a`) with the second NDArray (`b`).
+    ///
+    /// - Parameters:
+    ///   - a: The first NDArray to be multiplied.
+    ///   - b: The second NDArray to be multiplied.
+    /// - Returns: The result of the dot product between `a` and `b`, returned as an NDArray.
+    /// - Throws: `SNPError` if there is an issue performing the dot product, such as shape mismatch or type incompatibility.
+    public static func dot(_ a: NDArray, _ b: NDArray) throws(SNPError) -> NDArray {
+        // Calls the product function on the first array `a` with the second array `b`.
+        // This assumes `a.product(b)` performs the dot product operation for two NDArrays.
+        try a.product(b)
+    }
 }

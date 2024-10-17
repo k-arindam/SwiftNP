@@ -30,7 +30,7 @@ extension NDArray {
     ///   - rhs: The right-hand side NDArray in the multiplication.
     /// - Returns: A new NDArray representing the result of element-wise multiplication.
     /// - Throws: SNPError if the shapes of the NDArrays are incompatible.
-    public static func *(lhs: NDArray, rhs: NDArray) throws(SNPError) -> NDArray { try lhs.multiply(rhs) }
+    public static func *(lhs: NDArray, rhs: NDArray) throws(SNPError) -> NDArray { try lhs.arithmeticOperation(rhs, ops: .multiplication) }
     
     /// Multiplies an NDArray by a scalar
     /// - Parameters:
@@ -54,7 +54,7 @@ extension NDArray {
     ///   - rhs: The right-hand side NDArray in the division.
     /// - Returns: A new NDArray representing the result of element-wise division.
     /// - Throws: SNPError if the shapes of the NDArrays are incompatible.
-    public static func /(lhs: NDArray, rhs: NDArray) throws(SNPError) -> NDArray { try lhs.divide(rhs) }
+    public static func /(lhs: NDArray, rhs: NDArray) throws(SNPError) -> NDArray { try lhs.arithmeticOperation(rhs, ops: .division) }
     
     /// Divides an NDArray by a scalar
     /// - Parameters:
@@ -95,11 +95,19 @@ extension NDArray {
             // Initialize a variable to hold the result of the operation.
             var result: NSNumber = 0
             
-            // Perform addition or subtraction based on the specified operation.
-            if ops == .addition {
+            // Perform the specified operation.
+            switch ops {
+            case .addition:
                 result = NSNumber(value: lhs.nsnumber.doubleValue + rhs.nsnumber.doubleValue)
-            } else if ops == .subtraction {
+                
+            case .subtraction:
                 result = NSNumber(value: lhs.nsnumber.doubleValue - rhs.nsnumber.doubleValue)
+                
+            case .multiplication:
+                result = NSNumber(value: lhs.nsnumber.doubleValue * rhs.nsnumber.doubleValue)
+                
+            case .division:
+                result = NSNumber(value: lhs.nsnumber.doubleValue / rhs.nsnumber.doubleValue)
             }
             
             // Cast the result to the appropriate data type and update the flattened array.
@@ -114,7 +122,76 @@ extension NDArray {
         return try NDArray(shape: self.shape, dtype: dtype, data: flatArrayLHS).reshape(to: self.shape)
     }
     
-    private func multiply(_ other: NDArray) throws(SNPError) -> NDArray { other }
+    /// Computes the matrix product (dot product) of two NDArrays.
+    ///
+    /// This method implements matrix multiplication between two NDArrays following the rules:
+    /// - The last dimension of the first array (A) must match the second-to-last dimension of the second array (B).
+    /// - Supports higher-dimensional arrays by broadcasting their leading dimensions (if compatible).
+    ///
+    /// - Parameters:
+    ///   - other: The second NDArray (B) to multiply with the current NDArray (A).
+    /// - Throws: SNPError.shapeError if the shapes of A and B are incompatible for matrix multiplication.
+    /// - Returns: A new NDArray containing the result of the matrix product.
+    internal func product(_ other: NDArray) throws(SNPError) -> NDArray {
+        let shapeA = self.shape
+        let shapeB = other.shape
+        
+        // Ensure that the last dimension of A matches the second-to-last dimension of B.
+        guard shapeA.last == shapeB[shapeB.count - 2] else {
+            throw SNPError.shapeError(.custom(key: "IncompatibleShapes", args: ["\(self.shape)", "\(other.shape)"]))
+        }
+        
+        /// Multiplies two 2D matrices and returns the result as a flattened 1D array of Double.
+        ///
+        /// - Parameters:
+        ///   - matrixA: Flattened data of matrix A.
+        ///   - matrixB: Flattened data of matrix B.
+        ///   - shapeA: Shape of matrix A (e.g., [rows, common_dimension]).
+        ///   - shapeB: Shape of matrix B (e.g., [common_dimension, columns]).
+        /// - Returns: The resulting matrix multiplication as a flattened 1D array of Double.
+        func multiply2D(_ matrixA: [any Numeric], _ matrixB: [any Numeric], shapeA: [Int], shapeB: [Int]) -> [Double] {
+            let rowsA = shapeA[0]  // Number of rows in matrix A
+            let commonDim = shapeA[1]  // Shared dimension between A and B (columns of A, rows of B)
+            let colsB = shapeB[1]  // Number of columns in matrix B
+            
+            // Initialize result array for storing the matrix product.
+            var result = [Float64](repeating: 0.0, count: rowsA * colsB)
+            
+            // Perform the matrix multiplication.
+            for i in 0..<rowsA {
+                for j in 0..<colsB {
+                    for k in 0..<commonDim {
+                        let lhs = matrixA[i * commonDim + k].nsnumber  // Element of A
+                        let rhs = matrixB[k * colsB + j].nsnumber      // Element of B
+                        let newValue = lhs.doubleValue * rhs.doubleValue  // Multiply A and B elements
+                        result[i * colsB + j] += newValue  // Accumulate the product in the result matrix
+                    }
+                }
+            }
+            
+            return result
+        }
+        
+        // Flatten both NDArrays for matrix multiplication.
+        let flatA = try self.flattenedData()
+        let flatB = try other.flattenedData()
+        
+        // Get the 2D shapes from the last two dimensions of both A and B.
+        let shapeA2D = [shapeA[shapeA.count - 2], shapeA.last!]
+        let shapeB2D = [shapeB[shapeB.count - 2], shapeB.last!]
+        
+        // Broadcast the leading dimensions (if necessary) for higher-dimensional matrices.
+        let broadcastedShape = try Utils.broadcastShape(Array(shapeA.dropLast(2)), Array(shapeB.dropLast(2)))
+        
+        // Perform the matrix multiplication for the 2D parts of A and B.
+        let result2D = multiply2D(flatA, flatB, shapeA: shapeA2D, shapeB: shapeB2D)
+        
+        // The final result shape combines the broadcasted dimensions with the product of the 2D shapes.
+        let resultShape: Shape = broadcastedShape + [shapeA[shapeA.count - 2], shapeB.last!]
+
+        // Reshape the 1D result back into the full multidimensional shape.
+        return try NDArray(array: try Utils.reshapeFlatArray(result2D, to: resultShape))
+    }
     
     private func divide(_ other: NDArray) throws(SNPError) -> NDArray { other }
     

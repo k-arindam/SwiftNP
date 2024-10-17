@@ -53,7 +53,7 @@ public final class NDArray: Equatable, CustomStringConvertible {
     public var ndim: Int { shape.count }
     
     /// The total number of elements in the NDArray.
-    public var size: Int { shape.reduce(1, *) }
+    public var size: Int { shape.size }
     
     /// A Boolean indicating whether the NDArray is a scalar (i.e., has no dimensions).
     public var isScalar: Bool { shape.count == 0 }
