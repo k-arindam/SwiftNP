@@ -138,7 +138,7 @@ extension NDArrayImpl {
     ///   - other: The second NDArray (B) to multiply with the current NDArray (A).
     /// - Throws: SNPError.shapeError if the shapes of A and B are incompatible for matrix multiplication.
     /// - Returns: A new NDArray containing the result of the matrix product.
-    internal func product(_ other: any NDArray) throws(SNPError) -> any NDArray {
+    private func product(_ other: any NDArray) throws(SNPError) -> any NDArray {
         /// Checks if the `other` parameter can be cast to `NDArrayImpl`.
         ///
         /// This guard statement ensures that the dot product operation is only performed

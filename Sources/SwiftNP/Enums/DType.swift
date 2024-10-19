@@ -6,7 +6,10 @@
 //
 
 import Foundation
+
+#if canImport(CoreML)
 import CoreML
+#endif
 
 /// An enumeration representing different data types (DType) supported in SwiftNP.
 /// Each case corresponds to a numeric type used for arrays and computations.
@@ -45,6 +48,7 @@ public enum DType: CaseIterable, Codable {
         }
     }
     
+    #if canImport(CoreML)
     /// A computed property that maps the DType to the corresponding MLMultiArrayDataType.
     /// This is useful for integrating with Core ML when converting NDArray data types.
     public var mlMultiArrayDataType: MLMultiArrayDataType? {
@@ -70,6 +74,7 @@ public enum DType: CaseIterable, Codable {
             return nil
         }
     }
+    #endif
     
     /// Determines the DType of a given numeric input.
     /// - Parameter input: A numeric value of any type.

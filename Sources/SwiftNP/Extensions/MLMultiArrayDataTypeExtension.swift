@@ -6,6 +6,9 @@
 //
 
 import Foundation
+
+#if canImport(CoreML)
+
 import CoreML
 
 public extension MLMultiArrayDataType {
@@ -30,3 +33,5 @@ public extension MLMultiArrayDataType {
         }
     }
 }
+
+#endif

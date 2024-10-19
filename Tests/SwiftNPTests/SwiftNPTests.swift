@@ -1,5 +1,8 @@
 import Testing
+
+#if canImport(CoreML)
 import CoreML
+#endif
 
 #if canImport(UIKit)
 import UIKit
@@ -192,6 +195,7 @@ struct NDArrayFoundationTests {
     }
     #endif
     
+    #if canImport(CoreML)
     @Test func mlmultiarrayNDArray() async throws {
         let input = try MLMultiArray([1, 2, 3])
         let array = try input.toNDArray
@@ -200,6 +204,7 @@ struct NDArrayFoundationTests {
         #expect(input == output)
         
     }
+    #endif
     
     @Test func verifyTranspose() async throws {
         let array = try SNP.ndarray([[[1.0, 2.0, 9.0], [3.0, 4.0, 10.0]],

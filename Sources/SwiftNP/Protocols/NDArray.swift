@@ -6,7 +6,10 @@
 //
 
 import Foundation
+
+#if canImport(CoreML)
 import CoreML
+#endif
 
 #if canImport(UIKit)
 import UIKit
@@ -39,6 +42,7 @@ public protocol NDArray: Equatable, CustomStringConvertible {
     /// Converts the NDArray to a string representation.
     func toString() -> String
     
+    #if canImport(CoreML)
     /// Creates an NDArray instance from a given MLMultiArray.
     /// - Parameter mlMultiArray: The MLMultiArray to convert.
     /// - Throws: An error of type SNPError if conversion fails.
@@ -49,6 +53,7 @@ public protocol NDArray: Equatable, CustomStringConvertible {
     /// - Throws: An error of type SNPError if conversion fails.
     /// - Returns: A new MLMultiArray representing the NDArray.
     func toMLMultiArray() throws(SNPError) -> MLMultiArray
+    #endif
     
     #if canImport(UIKit)
     /// Creates an NDArray instance from a UIImage.
