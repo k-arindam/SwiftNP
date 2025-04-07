@@ -1,0 +1,14 @@
+//
+//  Reshape+AccelerateBackend.swift
+//  SwiftNP
+//
+//  Created by Arindam Karmakar on 08/04/25.
+//
+
+import Foundation
+
+internal extension AccelerateBackend {
+    func reshape<T>(_ array: NDArray<T>, to shape: Shape, order: ReshapeOrder) throws(SNPError) -> NDArray<T> where T : Numeric {
+        .init()
+    }
+}

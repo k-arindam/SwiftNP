@@ -2,13 +2,13 @@
 //  ArithmeticOperation.swift
 //  SwiftNP
 //
-//  Created by Arindam Karmakar on 14/10/24.
+//  Created by Arindam Karmakar on 08/04/25.
 //
 
 import Foundation
 
 /// An enumeration representing arithmetic operations that can be performed on matrices (NDArray).
-internal enum ArithmeticOperation: MatrixOperation, Codable, CaseIterable {
+internal enum ArithmeticOperation: Codable, CaseIterable {
     
     /// Represents the addition operation between two NDArray instances.
     case addition

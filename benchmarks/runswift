@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Check if name argument is provided
+if [ -z "$1" ]; then
+  echo "----->>> Usage: ./run.sh <name>"
+  exit 1
+fi
+
+NAME="$1"
+
+# Create a temporary main.swift file that calls NAME()
+echo "${NAME}()" > main.swift
+
+# Compile the Swift files
+swiftc utils.swift "$NAME.swift" main.swift -o "$NAME"
+
+# Check if compilation succeeded
+if [ $? -eq 0 ]; then
+  # echo "----->>> Running ./$NAME"
+  ./"$NAME"
+  rm -rf main.swift
+  rm -rf "$NAME"
+  # echo "----->>> Finished running $NAME."
+else
+  echo "----->>> Compilation failed."
+fi

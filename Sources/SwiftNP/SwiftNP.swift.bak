@@ -1,0 +1,41 @@
+// The Swift Programming Language
+// https://docs.swift.org/swift-book
+
+import Foundation
+
+public final class SwiftNP {
+    private init() {}
+    
+    private static let queue: DispatchQueue = .init(label: Constants.packageID, qos: .background)
+    
+    nonisolated(unsafe)
+    private static var _backendProvider: SNPBackendProvider = .accelerate
+    nonisolated(unsafe)
+    private static var _cachedBackend: (instance: any SNPBackend, provider: SNPBackendProvider)?
+    
+    internal static var backendProvider: SNPBackendProvider {
+        get { _backendProvider }
+        set {
+            Self.queue.async {
+                _backendProvider = newValue
+            }
+        }
+    }
+    
+    internal static var backend: any SNPBackend {
+        if let cachedBackend = _cachedBackend, cachedBackend.provider == backendProvider {
+            return cachedBackend.instance
+        }
+        
+        let newBackend: any SNPBackend
+        let newProvider: SNPBackendProvider = Self.backendProvider
+        
+        switch newProvider {
+        case .accelerate:
+            newBackend = AccelerateBackend()
+        }
+        
+        _cachedBackend = (instance: newBackend, provider: newProvider)
+        return newBackend
+    }
+}

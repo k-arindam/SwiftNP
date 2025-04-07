@@ -2,7 +2,7 @@
 //  ScalarOperation.swift
 //  SwiftNP
 //
-//  Created by Arindam Karmakar on 16/10/24.
+//  Created by Arindam Karmakar on 08/04/25.
 //
 
 import Foundation
@@ -13,7 +13,7 @@ import Foundation
 /// Scalar operations are performed on individual elements of a matrix and include:
 /// - `multiply`: Represents multiplication by a scalar.
 /// - `divide`: Represents division by a scalar.
-internal enum ScalarOperation: MatrixOperation, Codable, CaseIterable {
+internal enum ScalarOperation: Codable, CaseIterable {
     case multiply   // Multiplication operation
     case divide     // Division operation
 }
