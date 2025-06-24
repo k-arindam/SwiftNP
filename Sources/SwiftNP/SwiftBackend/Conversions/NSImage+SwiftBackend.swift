@@ -12,11 +12,11 @@ import Foundation
 import AppKit
 
 internal extension SwiftBackend {
-    func ndarray<T>(from nsImage: NSImage) throws(SNPError) -> NDArray<T> where T: Numeric {
+    func ndarray<T>(from nsImage: NSImage) throws(SNPError) -> NDArray<T> where T: SNPNumeric {
         throw .unimplementedError
     }
     
-    func nsImage<T>(from ndarray: NDArray<T>) throws(SNPError) -> NSImage where T: Numeric {
+    func nsImage<T>(from ndarray: NDArray<T>) throws(SNPError) -> NSImage where T: SNPNumeric {
         throw .unimplementedError
     }
 }

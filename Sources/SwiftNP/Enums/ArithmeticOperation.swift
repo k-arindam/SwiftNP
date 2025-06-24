@@ -8,7 +8,7 @@
 import Foundation
 
 /// An enumeration representing arithmetic operations that can be performed on matrices (NDArray).
-internal enum ArithmeticOperation: Codable, CaseIterable {
+internal enum ArithmeticOperation: Codable, Sendable, CaseIterable {
     
     /// Represents the addition operation between two NDArray instances.
     case addition

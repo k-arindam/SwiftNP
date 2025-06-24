@@ -9,15 +9,15 @@ import Foundation
 import Accelerate
 
 internal extension AccelerateBackend {
-    func arithmeticOperation<T>(lhs: NDArray<T>, rhs: NDArray<T>, ops: ArithmeticOperation) throws(SNPError) -> NDArray<T> where T: Numeric {
+    func arithmeticOperation<T>(lhs: NDArray<T>, rhs: NDArray<T>, ops: ArithmeticOperation) throws(SNPError) -> NDArray<T> where T: SNPNumeric {
         throw .unimplementedError
     }
     
-    func scalarOperation<T>(on array: NDArray<T>, with scalar: Double, ops: ScalarOperation) throws(SNPError) -> NDArray<T> where T: Numeric {
+    func scalarOperation<T>(on array: NDArray<T>, with scalar: Double, ops: ScalarOperation) throws(SNPError) -> NDArray<T> where T: SNPNumeric {
         throw .unimplementedError
     }
     
-    func product<T>(lhs: NDArray<T>, rhs: NDArray<T>) throws(SNPError) -> NDArray<T> where T: Numeric {
+    func product<T>(lhs: NDArray<T>, rhs: NDArray<T>) throws(SNPError) -> NDArray<T> where T: SNPNumeric {
         throw .unimplementedError
     }
 }

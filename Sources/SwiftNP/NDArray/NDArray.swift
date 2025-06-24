@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class NDArray<Element>: Sendable, Equatable, CustomStringConvertible where Element: Numeric & Sendable {
+public final class NDArray<Element>: Sendable, Equatable, CustomStringConvertible where Element: SNPNumeric & Sendable {
     internal init(shape: Shape, data: [Element]) {
         self.shape = shape
         self.dtype = Element.self
@@ -16,7 +16,7 @@ public final class NDArray<Element>: Sendable, Equatable, CustomStringConvertibl
     
     public let shape: Shape
     
-    public let dtype: any Numeric.Type
+    public let dtype: any SNPNumeric.Type
     
     public let data: [Element]
     

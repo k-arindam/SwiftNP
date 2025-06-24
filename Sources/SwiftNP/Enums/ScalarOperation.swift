@@ -13,7 +13,7 @@ import Foundation
 /// Scalar operations are performed on individual elements of a matrix and include:
 /// - `multiply`: Represents multiplication by a scalar.
 /// - `divide`: Represents division by a scalar.
-internal enum ScalarOperation: Codable, CaseIterable {
+internal enum ScalarOperation: Codable, Sendable, CaseIterable {
     case multiply   // Multiplication operation
     case divide     // Division operation
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 internal extension SwiftBackend {
-    func transpose<T>(_ array: NDArray<T>, axes: Axes?) throws(SNPError) -> NDArray<T> where T : Numeric {
+    func transpose<T>(_ array: NDArray<T>, axes: Axes?) throws(SNPError) -> NDArray<T> where T : SNPNumeric {
         throw .unimplementedError
     }
 }

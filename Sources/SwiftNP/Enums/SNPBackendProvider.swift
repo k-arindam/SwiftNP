@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SNPBackendProvider: Sendable, Codable, CaseIterable {
+public enum SNPBackendProvider: Codable, Sendable, CaseIterable {
     case accelerate
     case swift
 }

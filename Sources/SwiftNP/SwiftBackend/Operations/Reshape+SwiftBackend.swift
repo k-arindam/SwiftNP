@@ -8,7 +8,7 @@
 import Foundation
 
 internal extension SwiftBackend {
-    func reshape<T>(_ array: NDArray<T>, to shape: Shape, order: ReshapeOrder) throws(SNPError) -> NDArray<T> where T : Numeric {
+    func reshape<T>(_ array: NDArray<T>, to shape: Shape, order: ReshapeOrder) throws(SNPError) -> NDArray<T> where T : SNPNumeric {
         throw .unimplementedError
     }
 }

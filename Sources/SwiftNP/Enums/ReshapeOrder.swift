@@ -11,7 +11,7 @@ import Foundation
 ///
 /// - `c`: Represents C-style ordering, where the last index changes the fastest.
 /// - `f`: Represents Fortran-style ordering, where the first index changes the fastest.
-public enum ReshapeOrder: String, Codable, CaseIterable {
+public enum ReshapeOrder: String, Codable, Sendable, CaseIterable {
     case c = "C-style"        // C-style ordering
     case f = "Fortran-style"  // Fortran-style ordering
 }
