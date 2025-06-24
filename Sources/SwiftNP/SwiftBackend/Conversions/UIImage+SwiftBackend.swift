@@ -1,5 +1,5 @@
 //
-//  UIImage+AccelerateBackend.swift
+//  UIImage+SwiftBackend.swift
 //  SwiftNP
 //
 //  Created by Arindam Karmakar on 08/04/25.
@@ -11,7 +11,7 @@ import Foundation
 
 import UIKit
 
-internal extension AccelerateBackend {
+internal extension SwiftBackend {
     func ndarray<T>(from uiImage: UIImage) throws(SNPError) -> NDArray<T> where T: Numeric {
         throw .unimplementedError
     }

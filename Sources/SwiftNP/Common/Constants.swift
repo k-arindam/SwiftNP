@@ -16,7 +16,7 @@ internal final class Constants {
     internal static let packageHomepage: String = "swiftnp.karindam.in"
     internal static let packageAuthor: String = "Arindam Karmakar"
     internal static let packageLicense: String = "MIT"
-    internal static let packageID: String = "com.karindam.SwiftNP"
+    internal static let packageID: String = "in.karindam.SwiftNP"
     
     internal static let pi: Double = 3.14159265358979323846
     internal static let e: Double = 2.71828182845904523536

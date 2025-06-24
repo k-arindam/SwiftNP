@@ -192,7 +192,7 @@ internal final class Utils {
         // Ensure the array is homogeneous and does not contain nested arrays.
         guard array.isHomogeneous, !(array.first is [Any]) else {
             // Throw a value error if the array is not flat.
-            throw SNPError.valueError(messageKey: "NotFlat")
+            throw SNPError.valueError(.custom(key: "NotFlat"))
         }
         
         // Calculate the size of the outer dimension (first dimension) in the shape.
@@ -254,7 +254,7 @@ internal final class Utils {
             
             // If dimensions do not match and neither is 1, broadcasting is not possible
             if dimA != dimB && dimA != 1 && dimB != 1 {
-                throw SNPError.shapeError(messageKey: "NoBroadcasting")
+                throw SNPError.shapeError(.custom(key: "NoBroadcasting"))
             }
             
             // Set the broadcasted dimension to the maximum of the two

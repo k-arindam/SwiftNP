@@ -20,6 +20,12 @@ public final class NDArray<Element>: Sendable, Equatable, CustomStringConvertibl
     
     public let data: [Element]
     
+    public var ndim: Int { shape.count }
+    
+    public var size: Int { shape.size }
+    
+    public var isScalar: Bool { shape.count == 0 }
+    
     public var description: String { "NDArray" }
     
     public func isEqual(to: NDArray) -> Bool { (data == to.data) && (shape == to.shape) && (dtype == to.dtype) }

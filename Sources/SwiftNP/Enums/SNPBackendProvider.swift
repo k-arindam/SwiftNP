@@ -9,4 +9,5 @@ import Foundation
 
 public enum SNPBackendProvider: Sendable, Codable, CaseIterable {
     case accelerate
+    case swift
 }

@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+#if canImport(CoreML)
+
+import CoreML
+
+public extension MLMultiArray {}
+
+#endif
